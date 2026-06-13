@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — Battlezonex Pro</title>
+  <meta name="description" content="Production admin panel for Battlezonex Pro gaming platform.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Confirm Modal -->
+  <div class="modal" id="confirm-modal">
+    <div class="modal-content" style="max-width:380px;padding:0;">
+      <div style="padding:28px 26px;text-align:center;">
+        <div style="width:52px;height:52px;border-radius:50%;background:#fef9c3;border:2px solid #f59e0b;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:22px;color:#d97706;">
+          <i class="fas fa-exclamation"></i>
+        </div>
+        <h3 id="confirm-title" style="font-size:17px;font-weight:800;margin-bottom:8px;color:#1a1f36;">Are you sure?</h3>
+        <p id="confirm-msg" style="font-size:13px;color:#4a5080;line-height:1.5;">This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('confirm-modal').style.display='none'">Cancel</button>
+        <button class="btn btn-danger btn-sm" id="btn-confirm-yes">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Urgent Alert Bar -->
+  <div class="urgent-alert-bar" id="urgent-delay-bar">
+    <i class="fas fa-exclamation-triangle"></i>&nbsp; ATTENTION: YOU HAVE DELAYED MATCHES — RELEASE ROOM ID NOW!
+  </div>
+
+  <!-- Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- Mobile Top Bar -->
+  <div class="topbar" id="topbar">
+    <div class="topbar-brand">
+      <div class="brand-icon" style="width:30px;height:30px;font-size:13px;border-radius:8px;">⚡</div>
+      B-ZONE <em>PRO</em>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <div id="backend-status" style="padding:5px 11px;font-size:11px;"><i class="fas fa-server" style="font-size:10px;"></i> Connecting...</div>
+      <div class="hamburger" id="mobile-toggle"><i class="fas fa-bars"></i></div>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">⚡</div>
+      <div class="brand-name">B-ZONE <em>PRO</em></div>
+    </div>
+    </div>
+
+    <div class="sidebar-scroll">
+      <nav>
+        <div class="nav-group">
+          <div class="nav-group-label">Overview</div>
+          <div class="nav-item active" data-view="dashboard">
+            <div class="nav-icon"><i class="fas fa-chart-line"></i></div>
+            <span>Insights</span>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-label">Tournaments</div>
+          <div class="nav-item" data-view="matches">
+            <div class="nav-icon"><i class="fas fa-trophy"></i></div>
+            <span>Tournaments</span>
+          </div>
+          <div class="nav-item" data-view="results">
+            <div class="nav-icon"><i class="fas fa-flag-checkered"></i></div>
+            <span>Result Hub</span>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-label">Users</div>
+          <div class="nav-item" data-view="users">
+            <div class="nav-icon"><i class="fas fa-user-group"></i></div>
+            <span>Players</span>
+          </div>
+          <div class="nav-item" data-view="support">
+            <div class="nav-icon"><i class="fas fa-headset"></i></div>
+            <span>Support Hub</span>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-label">Finance</div>
+          <div class="nav-item" data-view="wallet">
+            <div class="nav-icon"><i class="fas fa-indian-rupee-sign"></i></div>
+            <span>Financials</span>
+          </div>
+          <div class="nav-item" data-view="transactions">
+            <div class="nav-icon"><i class="fas fa-clock-rotate-left"></i></div>
+            <span>History</span>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-label">Platform</div>
+          <div class="nav-item" data-view="config">
+            <div class="nav-icon"><i class="fas fa-sliders"></i></div>
+            <span>Settings</span>
+          </div>
+          <div class="nav-item" data-view="content">
+            <div class="nav-icon"><i class="fas fa-images"></i></div>
+            <span>Content</span>
+          </div>
+          <div class="nav-item" data-view="push">
+            <div class="nav-icon"><i class="fas fa-bell"></i></div>
+            <span>Broadcast</span>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <div class="sidebar-foot">
+      <div class="sidebar-foot-inner">
+        <div class="online-dot"></div>
+        <div class="sidebar-foot-text">
+          Admin Console
+          <span>Battlezonex Pro</span>
+        </div>
+        <div id="backend-status-desktop" style="margin-left:auto;font-size:10px;color:var(--tx-muted);"></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- ── DASHBOARD ── -->
+    <section id="dashboard" class="view-section active">
+
+      <!-- Desktop Welcome Header -->
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px;">
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--tx-3);margin-bottom:4px;">⚡ Welcome back, Admin</div>
+          <div style="font-size:28px;font-weight:900;color:var(--tx-1);letter-spacing:-0.5px;line-height:1.1;">Dashboard</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button class="btn btn-ghost btn-sm" onclick="window.location.reload()">
+            <i class="fas fa-rotate-right"></i> Refresh
+          </button>
+          <div id="backend-status"><i class="fas fa-server" style="font-size:11px;"></i> Connecting...</div>
+          <div style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.7);backdrop-filter:blur(8px);border:1px solid rgba(0,0,0,0.08);padding:6px 14px 6px 8px;border-radius:99px;box-shadow:0 2px 8px rgba(60,80,140,0.07);">
+            <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#00c9a7,#339af0);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;">A</div>
+            <span style="font-size:12.5px;font-weight:700;color:var(--tx-1);">Admin</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Welcome Banner Card (like reference) -->
+      <div class="welcome-card" style="margin-bottom:22px;">
+        <div class="welcome-card-text">
+          <div class="welcome-greeting">Platform at a glance 🎮</div>
+          <div class="welcome-title">Battlezonex Pro<br>Admin Console</div>
+          <div class="welcome-sub">Manage tournaments, players & financials in one place</div>
+        </div>
+        <div class="welcome-card-actions">
+          <button class="btn btn-teal" onclick="document.querySelector('.nav-item[data-view=matches]').click()">
+            <i class="fas fa-trophy"></i> New Tournament
+          </button>
+          <button class="btn btn-ghost" style="background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.15);color:#fff;" onclick="document.querySelector('.nav-item[data-view=users]').click()">
+            <i class="fas fa-users"></i> Players
+          </button>
+        </div>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:var(--teal-bg);color:var(--teal);">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-info">
+            <h3 id="stat-total-users">0</h3>
+            <p>Total Players</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:var(--violet-bg);color:var(--violet);">
+            <i class="fas fa-gamepad"></i>
+          </div>
+          <div class="stat-info">
+            <h3 id="stat-live-matches">0</h3>
+            <p>Live Matches</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:var(--amber-bg);color:var(--amber);">
+            <i class="fas fa-hand-holding-dollar"></i>
+          </div>
+          <div class="stat-info">
+            <h3 id="stat-pending-withdrawals">0</h3>
+            <p>Pending Payouts</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ── TOURNAMENTS ── -->
+    <section id="matches" class="view-section">
+      <div class="header">
+        <h2>Tournament Management</h2>
+        <button class="btn btn-primary" id="btn-create-match">
+          <i class="fas fa-plus"></i> New Tournament
+        </button>
+      </div>
+      <div class="card">
+        <div class="filter-tabs" style="margin-bottom:20px;">
+          <button class="btn btn-primary btn-sm" id="btn-filter-all">All</button>
+          <button class="btn btn-ghost btn-sm" id="btn-filter-upcoming">Upcoming</button>
+          <button class="btn btn-ghost btn-sm" id="btn-filter-ongoing">Ongoing</button>
+          <button class="btn btn-ghost btn-sm" id="btn-filter-resulted">Resulted</button>
+          <button class="btn btn-ghost btn-sm" id="btn-filter-cancelled">Cancelled</button>
+        </div>
+        <div id="tournament-list" class="tournament-grid"></div>
+      </div>
+    </section>
+
+    <!-- ── RESULT HUB ── -->
+    <section id="results" class="view-section">
+      <div class="header"><h2>Match Result Hub</h2></div>
+      <div class="card">
+        <div style="display:flex;gap:10px;margin-bottom:20px;">
+          <button class="btn btn-primary" id="btn-show-pending-results">Pending Results</button>
+          <button class="btn btn-ghost" id="btn-show-results-history">History</button>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Game / Map</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="results-list"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PLAYERS ── -->
+    <section id="users" class="view-section">
+      <div class="header">
+        <h2>Player Management</h2>
+        <div class="search-box" style="width:300px;">
+          <i class="fas fa-search"></i>
+          <input type="text" id="user-search-input" placeholder="Search name, email, UID...">
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Profile</th>
+                <th>Game Identity</th>
+                <th>Balance (W / D / B)</th>
+                <th>Stats</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="player-list"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FINANCIALS ── -->
+    <section id="wallet" class="view-section">
+      <div class="header"><h2>Financial Hub</h2></div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:var(--green-dim);color:var(--green);border-color:rgba(0,214,143,0.2);">
+            <i class="fas fa-arrow-down-long"></i>
+          </div>
+          <div class="stat-info">
+            <h3 id="count-deposits">0</h3>
+            <p>Deposit Requests</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:var(--red-dim);color:var(--red);border-color:rgba(255,71,87,0.2);">
+            <i class="fas fa-arrow-up-long"></i>
+          </div>
+          <div class="stat-info">
+            <h3 id="count-withdrawals">0</h3>
+            <p>Withdrawal Requests</p>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+          <div style="display:flex;gap:10px;">
+            <button class="btn btn-teal" id="btn-show-deposits"><i class="fas fa-arrow-down"></i> Deposits</button>
+            <button class="btn btn-ghost" id="btn-show-withdrawals"><i class="fas fa-arrow-up"></i> Withdrawals</button>
+          </div>
+          <button class="btn btn-primary" onclick="document.getElementById('add-funds-modal').style.display='block'">
+            <i class="fas fa-wallet"></i> Manual Add Funds
+          </button>
+        </div>
+        <div id="financial-table-box"></div>
+      </div>
+    </section>
+
+    <!-- ── HISTORY ── -->
+    <section id="transactions" class="view-section">
+      <div class="header"><h2>Platform Financial History</h2></div>
+      <div class="card">
+        <div class="search-box" style="max-width:400px;margin-bottom:20px;">
+          <i class="fas fa-search"></i>
+          <input type="text" id="tx-search-input" placeholder="Search by User ID or Reference...">
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Player</th>
+                <th>Amount</th>
+                <th>Ref / UPI</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="full-tx-list"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SUPPORT ── -->
+    <section id="support" class="view-section">
+      <div class="header">
+        <div>
+          <h2>Support Center</h2>
+          <div class="page-subtitle">Manage and resolve player tickets</div>
+        </div>
+      </div>
+
+      <div class="support-layout">
+        <!-- Left: Ticket List -->
+        <div class="ticket-panel">
+          <div class="ticket-panel-head">
+            <h4>Tickets</h4>
+            <div class="ticket-tabs">
+              <div class="ticket-tab active" id="tab-open" onclick="switchTicketTab('open')">
+                Open&nbsp;<span id="open-count" style="background:var(--brand-tint);color:var(--teal);border-radius:99px;padding:1px 7px;font-size:10px;">0</span>
+              </div>
+              <div class="ticket-tab" id="tab-resolved" onclick="switchTicketTab('resolved')">Resolved</div>
+            </div>
+          </div>
+          <div class="ticket-list" id="ticket-list"></div>
+        </div>
+
+        <!-- Right: Chat Panel -->
+        <div class="chat-panel" id="chat-module">
+          <div class="chat-panel-empty" id="chat-empty-state">
+            <div class="empty-icon"><i class="fas fa-comments"></i></div>
+            <p>Select a ticket to chat</p>
+            <span style="font-size:12px;color:var(--tx-4);">Your replies go directly to the player</span>
+          </div>
+          <div class="chat-header" id="chat-header" style="display:none;">
+            <div class="chat-user-info">
+              <div class="chat-user-name" id="active-ticket-title">—</div>
+              <div class="chat-user-id" id="active-ticket-user"></div>
+            </div>
+            <div class="chat-actions">
+              <button class="btn btn-success btn-sm" id="btn-close-ticket"><i class="fas fa-check"></i> Resolve</button>
+              <button class="btn btn-ghost btn-sm" onclick="closeChatPanel()" title="Close"><i class="fas fa-xmark"></i></button>
+            </div>
+          </div>
+          <div class="chat-messages-wrap" id="chat-messages" style="display:none;flex:1;overflow-y:auto;"></div>
+          <div class="chat-input-bar" id="chat-input-area" style="display:none;">
+            <input type="text" id="chat-input-box" placeholder="Type your reply...">
+            <button class="btn btn-primary" id="btn-send-msg" style="flex-shrink:0;padding:9px 14px;"><i class="fas fa-paper-plane"></i></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SETTINGS ── -->
+    <section id="config" class="view-section">
+      <div class="header"><h2>Platform Settings</h2></div>
+      <div class="card" style="max-width: 800px; margin: 0 auto; background: var(--bg-surface-glass); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1);">
+        <form id="system-config-form">
+          <div class="form-section-title anim-item" style="--delay:1"><i class="fas fa-sliders-h text-primary"></i> General Settings</div>
+          <div class="stats-grid anim-item" style="--delay:2; margin-bottom:0;">
+            <div class="form-group">
+              <label>Platform UPI ID</label>
+              <div class="input-icon-wrap"><i class="fas fa-wallet text-primary"></i><input type="text" id="cfg-upi"></div>
+            </div>
+            <div class="form-group">
+              <label>Support / Contact Link</label>
+              <div class="input-icon-wrap"><i class="fas fa-headset text-primary"></i><input type="text" id="cfg-support-link"></div>
+            </div>
+          </div>
+          <div class="stats-grid anim-item" style="--delay:3; margin-bottom:0;">
+            <div class="form-group">
+              <label>Welcome Bonus (₹)</label>
+              <div class="input-icon-wrap"><i class="fas fa-gift text-success"></i><input type="number" id="cfg-welcome-bonus"></div>
+            </div>
+            <div class="form-group">
+              <label>Referral Bonus (₹)</label>
+              <div class="input-icon-wrap"><i class="fas fa-users text-success"></i><input type="number" id="cfg-referral-bonus"></div>
+            </div>
+          </div>
+          <div class="stats-grid anim-item" style="--delay:4; margin-bottom:0;">
+            <div class="form-group">
+              <label>Player Match Fee (%)</label>
+              <div class="input-icon-wrap"><i class="fas fa-percent text-warning"></i><input type="number" id="cfg-fee-percent"></div>
+            </div>
+            <div class="form-group">
+              <label>App Theme Default</label>
+              <div class="input-icon-wrap"><i class="fas fa-palette text-warning"></i><input type="text" id="cfg-theme" placeholder="dark / light"></div>
+            </div>
+          </div>
+          <div class="stats-grid anim-item" style="--delay:4; margin-bottom:0;">
+            <div class="form-group">
+              <label>Home Wallpaper URL</label>
+              <div class="input-icon-wrap"><i class="fas fa-image text-primary"></i><input type="text" id="cfg-home-bg" placeholder="Leave empty for default"></div>
+            </div>
+            <div class="form-group">
+              <label>Winners Wallpaper URL</label>
+              <div class="input-icon-wrap"><i class="fas fa-image text-primary"></i><input type="text" id="cfg-winners-bg" placeholder="Leave empty for default"></div>
+            </div>
+            <div class="form-group">
+              <label>Help Wallpaper URL</label>
+              <div class="input-icon-wrap"><i class="fas fa-image text-primary"></i><input type="text" id="cfg-help-bg" placeholder="Leave empty for default"></div>
+            </div>
+            <div class="form-group">
+              <label>Profile Wallpaper URL</label>
+              <div class="input-icon-wrap"><i class="fas fa-image text-primary"></i><input type="text" id="cfg-profile-bg" placeholder="Leave empty for default"></div>
+            </div>
+            <div class="form-group">
+              <label>Earn Wallpaper URL</label>
+              <div class="input-icon-wrap"><i class="fas fa-image text-primary"></i><input type="text" id="cfg-earn-bg" placeholder="Leave empty for default"></div>
+            </div>
+          </div>
+
+          <div class="form-section-title anim-item" style="--delay:5; margin-top:20px;"><i class="fas fa-mobile-alt text-primary"></i> App Version & Status</div>
+          <div class="stats-grid anim-item" style="--delay:6; margin-bottom:0;">
+            <div class="form-group">
+              <label>Version Name</label>
+              <div class="input-icon-wrap"><i class="fas fa-code-branch text-primary"></i><input type="text" id="cfg-version"></div>
+            </div>
+            <div class="form-group">
+              <label>APK Update URL</label>
+              <div class="input-icon-wrap"><i class="fas fa-link text-primary"></i><input type="text" id="cfg-update-url"></div>
+            </div>
+            <div class="form-group">
+              <label>Maintenance Override</label>
+              <div class="input-icon-wrap"><i class="fas fa-tools text-danger"></i>
+                <select id="cfg-maint">
+                  <option value="false">Operational (Live)</option>
+                  <option value="true">Under Maintenance</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section-title anim-item" style="--delay:7; margin-top:20px;"><i class="fas fa-qrcode text-primary"></i> Payment QR Codes</div>
+          <div class="stats-grid anim-item" style="--delay:8; margin-bottom:0;">
+            <div class="form-group">
+              <label>Manual QR (Default)</label>
+              <div class="input-icon-wrap"><i class="fas fa-qrcode text-primary"></i><input type="text" id="cfg-qr-manual"></div>
+            </div>
+            <div class="form-group">
+              <label>QR ₹20</label>
+              <div class="input-icon-wrap"><i class="fas fa-rupee-sign text-success"></i><input type="text" id="cfg-qr-20"></div>
+            </div>
+          </div>
+          <div class="stats-grid anim-item" style="--delay:9; margin-bottom:0;">
+            <div class="form-group">
+              <label>QR ₹40</label>
+              <div class="input-icon-wrap"><i class="fas fa-rupee-sign text-success"></i><input type="text" id="cfg-qr-40"></div>
+            </div>
+            <div class="form-group">
+              <label>QR ₹100</label>
+              <div class="input-icon-wrap"><i class="fas fa-rupee-sign text-success"></i><input type="text" id="cfg-qr-100"></div>
+            </div>
+            <div class="form-group">
+              <label>QR ₹500</label>
+              <div class="input-icon-wrap"><i class="fas fa-rupee-sign text-success"></i><input type="text" id="cfg-qr-500"></div>
+            </div>
+          </div>
+
+          <div class="form-section-title anim-item" style="--delay:10; margin-top:20px;"><i class="fas fa-bullhorn text-primary"></i> Content</div>
+          <div class="form-group anim-item" style="--delay:11">
+            <label>Announcement Marquee</label>
+            <div class="input-icon-wrap"><i class="fas fa-comment-dots text-primary"></i><input type="text" id="cfg-announcement"></div>
+          </div>
+          <div class="form-group anim-item" style="--delay:12">
+            <label>Rules Text (HTML/Text)</label>
+            <textarea id="cfg-rules" rows="4"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary anim-item" style="--delay:13; margin-top:20px; width: 100%; justify-content: center; font-size: 1.1rem; padding: 12px; border-radius: 12px;">
+            <i class="fas fa-save"></i> Save Configuration
+          </button>
+        </form>
+      </div>
+
+      <div class="card" style="max-width: 800px; margin: 20px auto 0; background: rgba(255, 71, 87, 0.05); border: 1px solid rgba(255, 71, 87, 0.2); backdrop-filter: blur(10px);">
+        <div class="form-section-title text-danger" style="margin-bottom: 15px;"><i class="fas fa-exclamation-triangle"></i> Danger Zone (Database Wipe)</div>
+        <p style="font-size: 13px; color: var(--tx-muted); margin-bottom: 20px;">These actions are permanent and cannot be undone. They will wipe out all data from the database.</p>
+        
+        <div class="stats-grid" style="grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 0;">
+           <button type="button" class="btn btn-outline text-danger" id="btn-wipe-matches" style="border-color: rgba(255, 71, 87, 0.4); justify-content: center; height: 50px;">
+             <i class="fas fa-trash-alt"></i> Wipe All Matches
+           </button>
+           <button type="button" class="btn btn-outline text-danger" id="btn-wipe-txs" style="border-color: rgba(255, 71, 87, 0.4); justify-content: center; height: 50px;">
+             <i class="fas fa-trash-alt"></i> Wipe All Transactions
+           </button>
+           <button type="button" class="btn btn-danger" id="btn-wipe-all" style="grid-column: 1 / -1; justify-content: center; height: 50px; background: var(--danger);">
+             <i class="fas fa-skull-crossbones"></i> Wipe Entire Database
+           </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CONTENT MANAGER ── -->
+    <section id="content" class="view-section">
+      <div class="header"><h2>Content Manager</h2></div>
+
+      <!-- Banner Settings -->
+      <div class="card">
+        <div class="section-row">
+          <h4>Banner & Slider Settings</h4>
+          <button class="btn btn-primary btn-sm" id="btn-save-content-settings">
+            <i class="fas fa-save"></i> Save
+          </button>
+        </div>
+        <div class="stats-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:16px;">
+          <div class="form-group">
+            <label>Home Slider</label>
+            <select id="cfg-banner-enabled">
+              <option value="true">Enabled</option>
+              <option value="false">Hidden</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Referral Screen Banner URL</label>
+            <input type="text" id="cfg-referral-banner" placeholder="https://...">
+          </div>
+          <div class="form-group">
+            <label>Withdraw TDS Banner URL</label>
+            <input type="text" id="cfg-tds-banner" placeholder="https://i.ibb.co/...">
+          </div>
+        </div>
+        <hr>
+        <div class="section-row" style="margin-top:16px;">
+          <h4>Home Slider Images</h4>
+          <button class="btn btn-success btn-sm" id="btn-add-banner"><i class="fas fa-plus"></i> Add Slide</button>
+        </div>
+        <div id="banner-list" style="display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;"></div>
+      </div>
+
+      <!-- Game Categories -->
+      <div class="card">
+        <div class="section-row">
+          <h4>Game Categories</h4>
+          <button class="btn btn-teal btn-sm" id="btn-add-game"><i class="fas fa-plus"></i> Add Game</button>
+        </div>
+        <div class="table-container" style="margin-top:14px;">
+          <table>
+            <thead><tr><th>Game</th><th>Icon</th><th>Actions</th></tr></thead>
+            <tbody id="game-list"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Match Card Library -->
+      <div class="card">
+        <div class="section-row">
+          <h4>Match Card Library</h4>
+          <button class="btn btn-teal btn-sm" id="btn-add-card"><i class="fas fa-plus"></i> Add Card</button>
+        </div>
+        <div class="table-container" style="margin-top:14px;">
+          <table>
+            <thead><tr><th>Category</th><th>Preview</th><th>URL</th><th>Actions</th></tr></thead>
+            <tbody id="card-list"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── BROADCAST ── -->
+    <section id="push" class="view-section">
+      <div class="header"><h2>Broadcast Notifications</h2></div>
+      <div class="card" style="max-width:580px;">
+        <form id="push-form">
+          <div class="form-group"><label>Notification Title</label><input type="text" id="push-title" required></div>
+          <div class="form-group"><label>Message Body</label><textarea id="push-message" rows="3" required></textarea></div>
+          <div class="stats-grid" style="grid-template-columns:1fr 1fr;margin-bottom:0;">
+            <div class="form-group"><label>Banner Image URL</label><input type="text" id="push-banner" placeholder="https://..."></div>
+            <div class="form-group"><label>Action Link</label><input type="text" id="push-link" placeholder="https://..."></div>
+          </div>
+          <div style="display:flex;gap:8px;margin:14px 0;">
+            <button type="button" class="btn btn-ghost btn-sm" id="btn-save-push-defaults" style="flex:1;">
+              <i class="fas fa-bookmark"></i> Save as Default
+            </button>
+            <button type="button" class="btn btn-ghost btn-sm" id="btn-clear-push" style="flex:1;">
+              <i class="fas fa-eraser"></i> Clear
+            </button>
+          </div>
+          <button type="submit" class="btn btn-primary" id="btn-send-push" style="width:100%;justify-content:center;height:46px;">
+            <i class="fas fa-paper-plane"></i> Broadcast to All Users
+          </button>
+          <p style="margin-top:12px;font-size:12px;color:var(--tx-muted);">
+            <i class="fas fa-info-circle"></i> Sent with High Priority. Banner images appear in the notification tray.
+          </p>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ════════ MODALS ════════ -->
+
+  <!-- Tournament Modal -->
+  <div class="modal" id="match-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="modal-icon"><i class="fas fa-trophy"></i></div>
+          <h3>Configure Tournament</h3>
+        </div>
+        <button class="modal-close-btn" onclick="document.getElementById('match-modal').style.display='none'">
+          <i class="fas fa-xmark"></i>
+        </button>
+      </div>
+      <form id="match-form">
+        <input type="hidden" id="m-id">
+        <div class="form-group"><label>Match Title</label><input type="text" id="m-title" required></div>
+        <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr));margin-bottom:10px;">
+          <div class="form-group"><label>Entry Fee (₹)</label><input type="number" id="m-fee" required></div>
+          <div class="form-group"><label>Prize Pool (₹)</label><input type="number" id="m-prize" required></div>
+          <div class="form-group" id="m-kill-group"><label>Per Kill (₹)</label><input type="number" id="m-kill" value="0"></div>
+        </div>
+        <div class="form-group" style="background: rgba(26, 188, 156, 0.1); border-left: 4px solid var(--primary); padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+           <div>
+             <div style="font-size: 11px; color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;"><i class="fas fa-chart-line"></i> Estimated Profit</div>
+             <div style="font-size: 10px; color: var(--tx-muted); margin-top: 2px;">(Total Collection - Prize Pool)</div>
+           </div>
+           <div id="m-profit-display" style="font-size: 20px; font-weight: 800; color: var(--success);">₹0</div>
+        </div>
+        <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr));margin-bottom:0;">
+          <div class="form-group">
+            <label>Match Format</label>
+            <select id="m-format">
+              <option value="custom">Custom Setup</option>
+              <option value="survival">Battle Royale (Survival)</option>
+              <option value="survival_top10">Survival (Top 10 - 20 Slots)</option>
+              <option value="1v1">Clash Squad 1v1</option>
+              <option value="2v2">Clash Squad 2v2</option>
+              <option value="4v4">Clash Squad 4v4</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Game</label><select id="m-game"></select></div>
+          <div class="form-group"><label>Map</label><input type="text" id="m-map" value="Bermuda"></div>
+          <div class="form-group"><label>Total Spots</label><input type="number" id="m-spots" value="48"></div>
+        </div>
+        <div class="form-group"><label>Schedule Date & Time</label><input type="datetime-local" id="m-time" required></div>
+        <div class="stats-grid" style="grid-template-columns:1fr 1fr;margin-bottom:0;">
+          <div class="form-group">
+            <label>Preset Card</label>
+            <select id="m-banner-preset"><option value="">-- Library --</option></select>
+          </div>
+          <div class="form-group">
+            <label>Banner URL</label>
+            <input type="text" id="m-banner" placeholder="Paste or select">
+          </div>
+        </div>
+        <div class="form-group"><label>Stream Link</label><input type="text" id="m-stream" placeholder="YouTube / Rooter"></div>
+        <div class="form-group">
+          <label>Custom Prize (Survival)</label>
+          <textarea id="m-custom-prize" rows="6" placeholder="Rank 1: 70&#10;Rank 2: 60..."></textarea>
+        </div>
+        <div class="stats-grid" id="room-details-section" style="grid-template-columns:1fr 1fr;margin-bottom:0;">
+          <div class="form-group"><label>Room ID</label><input type="text" id="m-room-id"></div>
+          <div class="form-group"><label>Room Password</label><input type="text" id="m-room-pass"></div>
+        </div>
+        <input type="hidden" id="m-status">
+        <div id="match-cancel-box" style="display:none;">
+          <p>Match Cancellation</p>
+          <button type="button" class="btn btn-outline text-danger btn-sm" id="btn-cancel-match">
+            <i class="fas fa-ban"></i> Cancel Match & Refund All
+          </button>
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="document.getElementById('match-modal').style.display='none'">Discard</button>
+        <button type="button" class="btn btn-primary" onclick="document.getElementById('match-form').dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}))">
+          <i class="fas fa-check"></i> Commit Changes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Result Modal -->
+  <div class="modal" id="result-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="modal-icon"><i class="fas fa-flag-checkered"></i></div>
+          <h3>Declare Match Result</h3>
+        </div>
+        <button class="modal-close-btn" onclick="document.getElementById('result-modal').style.display='none'">
+          <i class="fas fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="result-match-info" style="font-size:14px;font-weight:700;color:var(--teal);margin-bottom:16px;"></div>
+        <div class="stats-grid" style="grid-template-columns:1fr 1fr;margin-bottom:18px;gap:12px;">
+          <div class="form-group" style="margin-bottom:0;"><label>Prize Per Kill (₹)</label><input type="number" id="calc-per-kill" value="0"></div>
+          <div class="form-group" style="margin-bottom:0;"><label>Rank 1 Bonus (₹)</label><input type="number" id="calc-win-bonus" value="0"></div>
+        </div>
+        <div class="table-container" style="max-height:340px;overflow-y:auto;border:1px solid var(--bd-2);">
+          <table>
+            <thead style="background:var(--bg-from);">
+              <tr><th>Rank</th><th>Player (IGN / UID)</th><th>Kills</th><th>Prize (₹)</th></tr>
+            </thead>
+            <tbody id="player-result-list"></tbody>
+          </table>
+        </div>
+        <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--bd);">
+          <p style="font-size:12px;color:var(--tx-muted);margin-bottom:0;">
+            <i class="fas fa-info-circle" style="color:var(--blue);"></i>
+            After declaring, a 30-min cooling period begins. Wallets are updated after you process payouts.
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="document.getElementById('result-modal').style.display='none'">Cancel</button>
+        <button class="btn btn-teal" id="btn-submit-result"><i class="fas fa-gavel"></i> Declare & Start Cooling</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Player Edit Modal -->
+  <div class="modal" id="player-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="modal-icon"><i class="fas fa-user-pen"></i></div>
+          <h3>Edit Player Profile</h3>
+        </div>
+        <button class="modal-close-btn" onclick="document.getElementById('player-modal').style.display='none'">
+          <i class="fas fa-xmark"></i>
+        </button>
+      </div>
+      <form id="player-form" class="modal-body">
+        <input type="hidden" id="p-uid">
+        
+        <div class="stats-grid anim-item" style="grid-template-columns:1fr 1fr;margin-bottom:0;">
+          <div class="form-group">
+            <label>Full Name</label>
+            <div class="input-icon-wrap">
+              <i class="fas fa-user"></i>
+              <input type="text" id="p-name" placeholder="Player Name">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <div class="input-icon-wrap">
+              <i class="fas fa-phone"></i>
+              <input type="text" id="p-phone" placeholder="9876543210">
+            </div>
+          </div>
+        </div>
+        
+        <div class="stats-grid anim-item" style="grid-template-columns:1fr 1fr;margin-bottom:0;">
+          <div class="form-group">
+            <label>In-Game Name (IGN)</label>
+            <div class="input-icon-wrap">
+              <i class="fas fa-gamepad"></i>
+              <input type="text" id="p-ign" placeholder="ProGamer">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Free Fire UID</label>
+            <div class="input-icon-wrap">
+              <i class="fas fa-id-card"></i>
+              <input type="text" id="p-ffuid" placeholder="UID">
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-section-title anim-item" style="margin-top:8px;">Wallet Balances</div>
+        <div class="stats-grid anim-item" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:0;">
+          <div class="form-group">
+            <div class="wallet-badge-wrap"><i class="fas fa-trophy"></i> Winning (₹)</div>
+            <input type="number" id="p-win" style="font-weight:700;color:var(--teal);">
+          </div>
+          <div class="form-group">
+            <div class="wallet-badge-wrap"><i class="fas fa-wallet"></i> Deposit (₹)</div>
+            <input type="number" id="p-dep" style="font-weight:700;">
+          </div>
+          <div class="form-group">
+            <div class="wallet-badge-wrap"><i class="fas fa-gift"></i> Bonus (₹)</div>
+            <input type="number" id="p-bon" style="font-weight:700;color:var(--amber);">
+          </div>
+        </div>
+        
+        <div class="form-group anim-item" style="margin-top:10px;">
+          <label>Account Status</label>
+          <div class="input-icon-wrap">
+            <i class="fas fa-shield-halved"></i>
+            <select id="p-status">
+              <option value="false">Active (Normal)</option>
+              <option value="true">Banned (Suspended)</option>
+            </select>
+          </div>
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="document.getElementById('player-modal').style.display='none'">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="document.getElementById('player-form').dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}))">
+          <i class="fas fa-save"></i> Save & Notify
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Joined Players Modal -->
+  <div class="modal" id="joined-players-modal">
+    <div class="modal-content full-screen">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <h3 id="jp-match-title">Joined Players</h3>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="btn btn-teal btn-sm" id="btn-notify-joined"><i class="fas fa-bell"></i> Notify All</button>
+          <button class="modal-close-btn" onclick="document.getElementById('joined-players-modal').style.display='none'">
+            <i class="fas fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+      <div class="modal-body" style="padding:0;">
+        <div class="table-container" style="border:none;border-radius:0;height:100%;">
+          <table style="min-width:100%;">
+            <thead>
+              <tr><th>IGN / Name</th><th>Gmail / Contact</th><th>UID</th></tr>
+            </thead>
+            <tbody id="joined-players-list"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notify Joined Modal -->
+  <div class="modal" id="notify-joined-modal">
+    <div class="modal-content" style="max-width:460px;">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="modal-icon"><i class="fas fa-bell"></i></div>
+          <h3>Targeted Push</h3>
+        </div>
+        <button class="modal-close-btn" onclick="document.getElementById('notify-joined-modal').style.display='none'">
+          <i class="fas fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group"><label>Title</label><input type="text" id="nj-title" value="Match Reminder"></div>
+        <div class="form-group"><label>Message</label><textarea id="nj-message" rows="4" placeholder="Hurry! Join now..."></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="document.getElementById('notify-joined-modal').style.display='none'">Cancel</button>
+        <button class="btn btn-teal" id="btn-nj-send"><i class="fas fa-paper-plane"></i> Send to All</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Category Modal -->
+  <div class="modal" id="game-modal">
+    <div class="modal-content" style="max-width:460px;">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="modal-icon"><i class="fas fa-gamepad"></i></div>
+          <h3>Manage Category</h3>
+        </div>
+        <button class="modal-close-btn" onclick="document.getElementById('game-modal').style.display='none'">
+          <i class="fas fa-xmark"></i>
+        </button>
+      </div>
+      <form id="game-form">
+        <input type="hidden" id="g-idx">
+        <div class="form-group"><label>Game Name</label><input type="text" id="g-name" required></div>
+        <div class="form-group"><label>Category Icon URL</label><input type="text" id="g-url" required></div>
+
+      </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="document.getElementById('game-modal').style.display='none'">Cancel</button>
+        <button type="button" class="btn btn-teal" onclick="document.getElementById('game-form').dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}))">
+          <i class="fas fa-save"></i> Save
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Match Card Modal -->
+  <div class="modal" id="card-modal">
+    <div class="modal-content" style="max-width:460px;">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="modal-icon"><i class="fas fa-image"></i></div>
+          <h3>Match Card URL</h3>
+        </div>
+        <button class="modal-close-btn" onclick="document.getElementById('card-modal').style.display='none'">
+          <i class="fas fa-xmark"></i>
+        </button>
+      </div>
+      <form id="card-form">
+        <input type="hidden" id="c-idx">
+        <div class="form-group"><label>Game Category</label><select id="c-game"></select></div>
+        <div class="form-group"><label>Card Image URL</label><input type="text" id="c-url" required></div>
+      </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="document.getElementById('card-modal').style.display='none'">Cancel</button>
+        <button type="button" class="btn btn-teal" onclick="document.getElementById('card-form').dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}))">
+          <i class="fas fa-save"></i> Save
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Funds Modal -->
+  <div class="modal" id="add-funds-modal">
+    <div class="modal-content" style="max-width:400px;">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="modal-icon" style="background:var(--teal-bg);color:var(--teal);"><i class="fas fa-coins"></i></div>
+          <h3>Manual Add Funds</h3>
+        </div>
+        <button class="modal-close-btn" onclick="document.getElementById('add-funds-modal').style.display='none'">
+          <i class="fas fa-xmark"></i>
+        </button>
+      </div>
+      <form id="add-funds-form" class="modal-body">
+        <div class="form-group anim-item">
+          <label>Player UID</label>
+          <div class="input-icon-wrap">
+            <i class="fas fa-id-badge"></i>
+            <input type="text" id="af-uid" placeholder="Paste Free Fire UID" required>
+          </div>
+        </div>
+        <div class="form-group anim-item">
+          <label>Wallet Type</label>
+          <div class="input-icon-wrap">
+            <i class="fas fa-wallet"></i>
+            <select id="af-type" required>
+              <option value="depositBalance">Deposit Balance</option>
+              <option value="winningBalance">Winning Balance</option>
+              <option value="bonusBalance">Bonus Balance</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group anim-item">
+          <label>Amount (₹)</label>
+          <div class="input-icon-wrap">
+            <i class="fas fa-rupee-sign"></i>
+            <input type="number" id="af-amt" placeholder="e.g. 100" required>
+          </div>
+        </div>
+        <div class="form-group anim-item" style="margin-top:6px;">
+          <label>Reason (Optional)</label>
+          <div class="input-icon-wrap">
+            <i class="fas fa-message"></i>
+            <input type="text" id="af-reason" placeholder="e.g. Promo, Refund...">
+          </div>
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="document.getElementById('add-funds-modal').style.display='none'">Cancel</button>
+        <button type="button" class="btn btn-teal" onclick="document.getElementById('add-funds-form').dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}))">
+          <i class="fas fa-paper-plane"></i> Add Funds
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- Image Preview Modal -->
+  <div class="modal" id="image-preview-modal" style="background: rgba(0,0,0,0.85); z-index: 99999;">
+    <div class="modal-content" style="max-width:95vw; background:transparent; box-shadow:none; text-align:center; padding:0; display:flex; flex-direction:column; align-items:center; justify-content:center; margin: 5vh auto;">
+      <div style="width:100%; text-align:right; margin-bottom:10px;">
+        <button onclick="document.getElementById('image-preview-modal').style.display='none'" style="background:rgba(255,255,255,0.2); border:none; color:#fff; font-size:24px; cursor:pointer; width:40px; height:40px; border-radius:50%;"><i class="fas fa-times"></i></button>
+      </div>
+      <img id="image-preview-src" src="" style="max-width:100%; max-height:80vh; border-radius:12px; object-fit:contain;">
+    </div>
+  </div>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
